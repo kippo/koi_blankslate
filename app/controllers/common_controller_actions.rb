@@ -7,6 +7,7 @@ module CommonControllerActions
     layout :layout_by_resource
     helper :all
     helper Koi::NavigationHelper
+    helper OrnamentSeoHelper
     helper_method :seo
     before_filter :sign_in_as_admin! if Rails.env.development?
   end

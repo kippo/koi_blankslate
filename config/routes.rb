@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get '/events', to: 'application#events' #Kipp Starter, see the 'events' method in the 'application_controller', and the 'events.html.erb' in the views/application folder
+  
   get '/styleguide/:action' => 'styleguide'
   get '/styleguide' => 'styleguide#index'
   resources :uploads do

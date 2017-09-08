@@ -26,6 +26,26 @@
     seo_title_postfix = seo_title
   end
 
+  def absolute_url(url)
+    if url && !url.include?("http") 
+      URI.join(root_url, url)
+    else
+      url
+    end
+  end
+
+  # Method to clean input from Koi 
+  def clean_share_input(input) 
+    raw(input).gsub(/"/, '\'')
+  end
+
+
+  if !defined?(seo)
+    def seo(value)
+      false
+    end
+  end
+
   # Page Title
   if !seo("title").blank?
     seo_title = seo("title")
