@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# website: http://ogp.me/ns/website#">
+
+    <meta charset="utf-8"/>
+
+    <%= render "layouts/seo" -%>
+
+    <!-- META -->
+    <%= csrf_meta_tags %>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <% unless Rails.env == "production" %>
+      <meta name="robots" content="noindex,nofollow"/>
+    <% end  %>
+    <%= yield :meta %>
+
+    <script>
+      window.Ornament = {};
+    </script>
+
+    <!-- WEBFONTS -->
+    <%= render "layouts/webfonts", config: {
+      google: {
+        families: ['Open Sans:400,700,400italic,700italic'],
+      }
+    } -%>
+
+    <!-- STYLES -->
+    <%= split_stylesheet_link_tag "styleguide", :media => "all" %>
+    <%= yield :styles %>
+
+    <!-- SCRIPTS -->
+    <%= javascript_include_tag "application" %>
+    <!--[if lt IE 9]>
+      <%#= javascript_include_tag "selectivizr" %>
+      <%= javascript_include_tag "respond" %>
+    <![endif]-->
+    <%= yield :scripts %>
+
+  </head>
+
+  <!--[if lte IE 8 ]><body class="ie8 styleguide <%= yield :body_class -%>"> <![endif]-->
+  <!--[if (gt IE 8)|!(IE)]><!--> <body class="styleguide <%= yield :body_class -%>"> <!--<![endif]-->
+
+    <a class="skip-link" href="#main">skip to content</a>
+
+    <div class="layout">
+
+      <div class="layout--mobile-tray">
+        <nav class="navigation-mobile">
+          <div class="pane-wrapper">
+            <div class="pane">
+              <div class="pane--navigation-container">
+                <%= render "layouts/styleguide/styleguide_navigation", heading_class: "sg-nav--heading", list_class: "non-pane" -%>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </div>
+
+      <%= content_tag :div, class: "layout--content environment-#{Rails.env}" do %>
+
+        <header class="sg-header layout--header" role="banner">
+          <div class="layout--container">
+            <hgroup class="sg-header--logo">
+              <h1><%= link_to styleguide_path do -%>
+                Ornament <span data-ornament-version></span>
+              <%- end -%></h1> <a href="https://github.com/katalyst/ornament" class="button__confirm button__small">Github</a>
+              <h2>The front-end pattern library and styleguide for Katalyst web applications</h2>
+            </hgroup>
+            <button class="sg-header--menu" data-mobile-menu-switch>open navigation</button>
+          </div>
+        </header>
+
+        <div data-layout-positioner class="layout--positioner">
+          <%= render "/shared/oldie" -%>
+          <%= yield :above_layout -%>
+          <%- if content_for?(:title) -%>
+            <div class="sg-title">
+              <div class="layout--container">
+                <h2 class="heading-three"><%= yield(:title) -%></h2>
+                <%= link_to raw("&lsaquo; Back"), styleguide_path -%>
+              </div>
+            </div>
+          <%- end -%>
+          <%- if content_for?(:global) || !yield.blank? -%>
+            <main class="layout--main" role="main">
+              <div class="layout--container">
+                <a id="main" name="main" tabindex="-1"></a>
+                <%= content_for?(:global) ? yield(:global) : yield %>
+              </div>
+            </main>
+          <%- end -%>
+          <%= yield :below_layout -%>
+          <footer class="sg-footer" role="contentinfo"></footer>
+        </div>
+      </div>
+
+    <% end %>
+
+    <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+    <%= javascript_include_tag "styleguide" %>
+    <%= javascript_include_tag "application_bottom" %>
+    <%= yield :scripts_bottom %>
+
+    <%= render "layouts/analytics" -%>
+
+  </body>
+
+</html>
